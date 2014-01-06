@@ -10,6 +10,7 @@ var mapEditor = {
    lineGroup:null,
    lastLinePoint:null,
    init:function(){
+          var that = this;
          // if(stage!=null){
          //    stage.clear();
          //  }
@@ -21,9 +22,7 @@ var mapEditor = {
           })
           console.log(stage);
           this.loadBackground(stage);
-          //this.zoneName();
-          //this.endZone();
-          
+          that.drawDone();
    },
    loadBackground:function(stage){
          // Create a new layer
@@ -93,10 +92,10 @@ var mapEditor = {
       //var x = greenLine.intersects(greenLine);
       //console.log(x);
       stage.add(layer);
-      that.drawDone();
+      
    },
    redrawShape:function(things){
-        console.log(things[0]);
+      //console.log(things[0]);
 
       var triangle = new Kinetic.Shape({
       drawFunc: function(context) {
@@ -115,12 +114,23 @@ var mapEditor = {
         lineJoin:'round',
         opacity: 0.1
       });
+
+
+      triangle.on('mouseover', function() {
+        this.setOpacity(0.5);
+        layer.draw();
+      });
+
+      triangle.on('mouseout', function() {
+        this.setOpacity(0.1);
+        layer.draw();
+      });
+
       mapEditor.zoneName('Zone A');
       layer.add(triangle);
-      
       stage.add(layer);
-
-
+     
+      mapEditor.plot = [];
    },
    zoneName:function(tooltipDesc){
       // tooltip
@@ -138,7 +148,7 @@ var mapEditor = {
         pointerWidth: 10,
         pointerHeight: 10,
         lineJoin: 'round',
-        shadowColor: 'black',
+        shadowColor: '#CECECE',
         shadowBlur: 10,
         shadowOffset: 10,
         shadowOpacity: 0.5
@@ -151,29 +161,31 @@ var mapEditor = {
         padding: 5,
         fill: 'white'
       }));
-      group.add(tooltip)
+      group.add(tooltip);
       layer.add(group);
       stage.add(layer);
 
    },
    drawDone:function(){
+      document.getElementById('drawDone').addEventListener('click',function(){
+          // layer.remove(lineGroup);
+          // layer.clear();
+          // stage.clear();
+          // stage.clearCache();
+          // console.log(lastLinePoint);
+          // lastLinePoint = null;
+          //lineGroup.removeChildren();
+          console.log(lastLinePoint);
 
-      var drawDone = document.getElementById('drawDone');
-      drawDone.addEventListener('click',function(){
-          //alert('green line remove');
-          //lineGroup.remove();
-          
-          layer.remove(lineGroup);
-          //layer.draw();
+
           mapEditor.redrawShape(lastLinePoint);
+          lineGroup = new Kinetic.Group({
+             draggable: true
+          });
+
       })
-   },
-   quickLoad:function(){
-
-
    }
 }
-
   function getMousePos(canvas, evt) {
     //console.log(canvas);
     var rect = canvas.getBoundingClientRect();
@@ -182,10 +194,6 @@ var mapEditor = {
       y: evt.clientY - rect.top
     };
   }
-
-
-
-
 
  mapEditor.init();
 
