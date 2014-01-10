@@ -1,6 +1,6 @@
 var mapZone = document.getElementById('mapZone');
 var context = mapZone.getContext("2d");
-
+var shapeArray = [];
 
 var mapEditor = {
    plot:[],
@@ -86,6 +86,7 @@ var mapEditor = {
       }); 
 
       lastLinePoint = greenLine.getPoints();
+      console.log(lastLinePoint)
       lineGroup.add(greenLine);
       layer.add(lineGroup);
       
@@ -95,7 +96,7 @@ var mapEditor = {
       
    },
    redrawShape:function(things){
-      //console.log(things[0]);
+      //console.log(things);
 
       var triangle = new Kinetic.Shape({
       drawFunc: function(context) {
@@ -129,7 +130,7 @@ var mapEditor = {
       mapEditor.zoneName('Zone A');
       layer.add(triangle);
       stage.add(layer);
-     
+      
       mapEditor.plot = [];
    },
    zoneName:function(tooltipDesc){
@@ -175,13 +176,18 @@ var mapEditor = {
           // console.log(lastLinePoint);
           // lastLinePoint = null;
           //lineGroup.removeChildren();
-          console.log(lastLinePoint);
+          //console.log(lastLinePoint);
+          console.log(shapeArray);
+          shapeArray.push(lastLinePoint);
 
+          for(var lastPoint in shapeArray){
+            console.log(lastPoint);
+            mapEditor.redrawShape(shapeArray[lastPoint]);
+            // lineGroup = new Kinetic.Group({
+            //    draggable: true
+            // });
+          }
 
-          mapEditor.redrawShape(lastLinePoint);
-          lineGroup = new Kinetic.Group({
-             draggable: true
-          });
 
       })
    }
